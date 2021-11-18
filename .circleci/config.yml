@@ -2,32 +2,32 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:chakracore-8.11.1
-    working_directory: ~/repo
+      - image: circleci/node:chakracore-8.11.1  //Pulling a docker image
+    working_directory: ~/repo //going inside the container dir
     steps:
-      - checkout
+      - checkout //pulls the code from github to container
       # Download and cache dependencies
-      - restore_cache:
+      - restore_cache: //create a cache
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-      - run:
+      - run:// run the commands
           name: Install dependencies
           command: npm install
-      - save_cache:
+      - save_cache: //saving the cache
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run:
+      - run: //running the test cases
           name: Running tests
           command: npm test
-  deploy:
+  deploy: // deploy step
     docker:
-      - image: circleci/node:chakracore-8.11.1
+      - image: circleci/node:chakracore-8.11.1 //pulling a container image
     steps:
       - run:
-          name: AWS EC2 deploy
+          name: AWS EC2 deploy 
           command: |
             ssh -o StrictHostKeyChecking=no ubuntu@13.236.1.107 \
             "echo Start deploy && \
